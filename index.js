@@ -3,17 +3,18 @@ const fs = require('fs');
 const configFile = JSON.parse(fs.readFileSync('auth.cfg', 'utf8'));
 
 const fetchAttendees = ()=> {
-    //let bringMoreItems = true;
+    let bringMoreItems = true;
+    let result = [];
+
     return fetch(configFile.urlAPI,configFile.settings)
         .then( response => {return response.json()})
         .then( data => {
-            console.log(data.pagination);
             bringMoreItems = data.pagination.has_more_items;
             let attendees = data.attendees;
             attendees.forEach(attendee => {
                 result.push(attendee);
             });
-            return attendees;
+            return result;
         })
         .catch( error => console.log(error))
 };
