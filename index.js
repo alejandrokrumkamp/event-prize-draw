@@ -2,10 +2,11 @@ const fetch = require('isomorphic-fetch');
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('auth.cfg', 'utf8'));
 
+let attendees = [];
 let bringMoreItems = true;
 
-// Bring all attendees to populate an array of full names of attendees
 const fetchAttendees = ()=> {
+    // Will bring a page of attendee (up to 50)
     let result = [];
 
     return fetch(config.urlAPI,config.settings)
@@ -19,32 +20,34 @@ const fetchAttendees = ()=> {
 
             if(bringMoreItems){
                 config.urlAPI += "?continuation="+data.pagination.continuation;
-                console.log("Next url to bring items:"+ config.urlAPI)
             }
 
             return result;
         })
-        .catch( error => console.log(error))
+        .catch( error => console.log(error) )
 };
 
-const fetchAllAttendees = async ()=>{
-    let counter = 0;
-    while(bringMoreItems){
-        let attendees = await fetchAttendees();
-        attendees.forEach((attendee)=>{
-            counter++;
-            console.log(attendee.profile.first_name+" "+attendee.profile.last_name)
-            console.log(attendee.status)
-        })
+const fetchAllAttendeesWithStatus = async (status)=>{
+    // Will bring all attendees with certain status
 
-        console.log(counter);
+    while(bringMoreItems){
+        let fetchedAttendees = await fetchAttendees();
+        await fetchedAttendees
+            .filter((attendee)=> attendee.status === status)
+            .forEach((attendee)=>{
+                attendees.push(attendee)
+            })
     }
-    /*fetchAttendees()
-        .then((attendees)=>attendees.forEach((attendee)=>{
-            counter++;
-            console.log(attendee.profile.first_name+" "+attendee.profile.last_name)
-        }))
-        .then(()=>console.log(counter));*/
 }
 
-fetchAllAttendees();
+const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const getRandom = (attendees) => {
+    console.log(attendees)
+    console.log(Math.random(0,attendees.length))
+}
+
+// 'Checked In' | 'Attending' | 'Not Attending'
+fetchAllAttendeesWithStatus('Checked In').then(()=> console.log(attendees));
