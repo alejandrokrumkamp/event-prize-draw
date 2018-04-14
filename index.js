@@ -2,9 +2,10 @@ const fetch = require('isomorphic-fetch');
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('auth.cfg', 'utf8'));
 
+let bringMoreItems = true;
+
 // Bring all attendees to populate an array of full names of attendees
 const fetchAttendees = ()=> {
-    let bringMoreItems = true;
     let result = [];
 
     return fetch(config.urlAPI,config.settings)
@@ -17,18 +18,33 @@ const fetchAttendees = ()=> {
             });
 
             if(bringMoreItems){
-                config.settings.headers.Authorization = "Bearer "+data.pagination.continuation;
-                console.log("Next token to bring items:"+ config.settings.headers.Authorization)
+                config.urlAPI += "?continuation="+data.pagination.continuation;
+                console.log("Next url to bring items:"+ config.urlAPI)
             }
 
             return result;
         })
         .catch( error => console.log(error))
 };
-let counter = 0;
-fetchAttendees()
-    .then((attendees)=>attendees.forEach((attendee)=>{
-        counter++;
-        console.log(attendee.profile.first_name+" "+attendee.profile.last_name)
-    }))
-    .then(()=>console.log(counter));
+
+const fetchAllAttendees = async ()=>{
+    let counter = 0;
+    while(bringMoreItems){
+        let attendees = await fetchAttendees();
+        attendees.forEach((attendee)=>{
+            counter++;
+            console.log(attendee.profile.first_name+" "+attendee.profile.last_name)
+            console.log(attendee.status)
+        })
+
+        console.log(counter);
+    }
+    /*fetchAttendees()
+        .then((attendees)=>attendees.forEach((attendee)=>{
+            counter++;
+            console.log(attendee.profile.first_name+" "+attendee.profile.last_name)
+        }))
+        .then(()=>console.log(counter));*/
+}
+
+fetchAllAttendees();
