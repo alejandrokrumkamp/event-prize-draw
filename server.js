@@ -9,6 +9,7 @@ const listenPort = 3000;
 app.use('/', express.static(__dirname + '/public/html'));
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/img', express.static(__dirname + '/public/img'));
+app.use('/js', express.static(__dirname + '/public/js'));
 
 app.get('/randomAttendee',(req,res)=>{
     getRandomAttendee()

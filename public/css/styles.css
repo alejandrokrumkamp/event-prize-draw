@@ -17,6 +17,26 @@ h1 {
     width: 100%;
 }
 
+#event-prize-draw {
+    bottom:0em;
+    font-size: 0.9em;
+    font-weight: bold;
+    right:1%;
+    position:fixed;
+}
+
+#event-prize-draw p {
+    display: inline-block;
+    margin-bottom: 0.1em;
+    line-height: 2em;
+}
+
+#event-prize-draw #fork-button {
+    display: inline-block;
+    margin-top: 0.25em;
+    vertical-align: middle;
+}
+
 #sponsors {
 
 }
