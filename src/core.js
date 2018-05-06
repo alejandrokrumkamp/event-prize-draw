@@ -44,11 +44,15 @@ const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const getRandomAttendee = () => {
+const selectRandomAttendee = () => {
     let randomKey = getRandomInt(0,attendees.length);
     let randomAttendee = attendees[randomKey];
-    console.log(randomAttendee.profile.first_name,' ',randomAttendee.profile.last_name)
+    return randomAttendee.profile.first_name+' '+randomAttendee.profile.last_name;
 }
 
-// 'Checked In' | 'Attending' | 'Not Attending'
-fetchAllAttendeesWithStatus('Checked In').then(()=> getRandomAttendee());
+const getRandomAttendee = () => {
+    // 'Checked In' | 'Attending' | 'Not Attending'
+    return fetchAllAttendeesWithStatus('Checked In').then(()=> selectRandomAttendee());
+}
+
+module.exports.getRandomAttendee = getRandomAttendee;

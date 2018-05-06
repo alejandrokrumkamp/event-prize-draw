@@ -47,3 +47,21 @@ h1 {
     padding: 0.5em;
     width: 50%;
 }
+
+.prize button {
+    display: inline-block;
+    height: 50px;
+    vertical-align: middle;
+    width: 100px;
+}
+
+.prize img {
+    display: inline-block;
+    vertical-align: top;
+    width: 10%;
+}
+
+.prize h2 {
+    display: inline-block;
+    width: 70%;
+}
